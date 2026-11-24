@@ -1,0 +1,150 @@
+:root {
+  --bg: #fff; --bg2: #f5f5f7; --fg: #1d1d1f; --muted: #737373; --border: #d7d7db;
+  --sel: #cfe3ff; --accent: #0060df;  color-scheme: light;
+}
+/* color-scheme makes native controls (checkboxes, scrollbars) match the theme. */
+body.dark {
+  color-scheme: dark;
+  --bg: #232327; --bg2: #18181a; --fg: #e8e8ea; --muted: #a0a0a6; --border: #3a3a3f;
+  --sel: #204e8a; --accent: #75bfff;}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { height: 100%; margin: 0; }
+body {
+  display: flex; flex-direction: column;
+  background: var(--bg); color: var(--fg);
+  font: 12px/1.4 system-ui, sans-serif;
+}
+button, input, select {
+  font: inherit; color: var(--fg); background: var(--bg2);
+  border: 1px solid var(--border); border-radius: 3px; padding: 2px 6px;
+}
+button { cursor: pointer; white-space: nowrap; }
+button:disabled { cursor: default; opacity: .5; }
+/* Monochrome checkboxes: filled with the text color when checked. */
+input[type=checkbox] { margin: 0; flex: none; accent-color: var(--fg); }
+#mode-label { display: flex; align-items: center; gap: 4px; white-space: nowrap; cursor: pointer; }
+body:not(.select-mode) .check, body:not(.select-mode) .sel-only { display: none; }
+
+#toolbar {
+  display: flex; flex-wrap: wrap; gap: 4px 6px; align-items: center;
+  padding: 4px 6px; border-bottom: 1px solid var(--border);
+}
+#filter { flex: 1 1 140px; min-width: 0; }
+#count { color: var(--muted); white-space: nowrap; }
+
+#main { flex: 1; display: flex; min-height: 0; }
+#tree {
+  width: 340px; min-width: 160px; max-width: 80%;
+  overflow: auto; resize: horizontal;
+  border-right: 1px solid var(--border); padding: 4px 0;
+  white-space: nowrap;
+}
+#tree details > .children { padding-left: 14px; }
+#tree summary {
+  display: flex; align-items: center; gap: 4px;
+  padding: 1px 6px; cursor: default; list-style: none;
+}
+#tree summary::-webkit-details-marker { display: none; }
+#tree summary::before { content: '▸'; width: 10px; flex: none; color: var(--muted); }
+#tree details[open] > summary::before { content: '▾'; }
+#tree summary > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+#tree summary.host { --icon: url(icons/host.svg); }
+#tree summary.folder { --icon: url(icons/folder.svg); }
+#tree summary:hover, .file:hover { background: var(--bg2); }
+
+.file {
+  display: flex; align-items: center; gap: 4px;
+  padding: 1px 6px 1px 20px; cursor: default;
+}
+.file .name { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.file { --icon: url(icons/other.svg); }
+.file.selected, .file.selected:hover { background: var(--sel); }
+.k-image    { --icon: url(icons/image.svg); }
+.k-video    { --icon: url(icons/video.svg); }
+.k-audio    { --icon: url(icons/audio.svg); }
+.k-script   { --icon: url(icons/script.svg); }
+.k-style    { --icon: url(icons/style.svg); }
+.k-document { --icon: url(icons/document.svg); }
+.k-font     { --icon: url(icons/font.svg); }
+.k-text     { --icon: url(icons/text.svg); }
+
+/* Icons are SVG masks painted in the text color, so they follow the theme. */
+.file .name::before, .tab .name::before, #tree summary > span::before {
+  content: ''; display: inline-block; width: 12px; height: 12px;
+  margin-right: 5px; vertical-align: -2px;
+  background: var(--fg); opacity: .75;
+  mask: var(--icon) center / contain no-repeat;
+}
+
+/* Preview area: vertical tab column on the left, file view on the right. */
+#preview { flex: 1; display: flex; min-width: 0; min-height: 0; }
+/* Native scrollbar (themed via color-scheme), always shown: it only becomes
+   draggable once there are more tabs than fit. The extra width keeps ~150px
+   for the tab names. */
+#tabs {
+  flex: none; width: 168px; overflow-y: scroll; overflow-x: hidden; padding: 2px 0;
+  background: var(--bg); border-right: 1px solid var(--border);
+}
+.tab {
+  display: flex; align-items: center; gap: 2px;
+  padding: 3px 2px 3px 6px; cursor: default; color: var(--muted);
+  border-left: 2px solid transparent;
+}
+.tab:hover { color: var(--fg); background: var(--bg2); }
+.tab.active { background: var(--bg2); color: var(--fg); border-left-color: var(--fg); }
+.tab .name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tab .close {
+  flex: none; border: 0; background: none; color: inherit; padding: 0 4px;
+  font-size: 14px; line-height: 1; visibility: hidden;
+}
+.tab:hover .close, .tab.active .close { visibility: visible; }
+.tab .close:hover { background: var(--border); }
+#view { flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+
+/* Right-click menu on tabs. */
+#menu {
+  position: fixed; z-index: 10; min-width: 170px; padding: 4px 0;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .35);
+}
+#menu[hidden] { display: none; }
+#menu .item { padding: 5px 14px; cursor: default; white-space: nowrap; }
+#menu .item:hover { background: var(--bg2); }
+#menu .item.disabled { color: var(--muted); pointer-events: none; }
+
+#preview-bar {
+  display: flex; flex-wrap: wrap; gap: 4px 6px; align-items: center;
+  padding: 4px 6px; border-bottom: 1px solid var(--border);
+}
+#preview-bar[hidden] { display: none; }
+#preview-url {
+  flex: 1 1 180px; min-width: 0; color: var(--accent);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+#preview-info { color: var(--muted); white-space: nowrap; }
+#preview-body {
+  flex: 1; overflow: auto; padding: 8px;
+  display: flex; align-items: flex-start; justify-content: center;
+}
+#preview-body img, #preview-body video {
+  max-width: 100%; max-height: 100%; object-fit: contain;
+  background: repeating-conic-gradient(#8883 0 25%, transparent 0 50%) 0 0 / 16px 16px;
+  cursor: zoom-in;
+}
+#preview-body img.actual { max-width: none; max-height: none; cursor: zoom-out; }
+#preview-body pre {
+  align-self: stretch; flex: 1; margin: 0;
+  font: 12px/1.45 ui-monospace, Consolas, monospace;
+  white-space: pre-wrap; word-break: break-all;
+}
+.hint { color: var(--muted); text-align: center; margin-top: 40px; }
+
+/* Narrow panel (e.g. DevTools docked to the side): stack tree above preview. */
+@media (max-width: 700px) {
+  #main { flex-direction: column; }
+  #tree {
+    flex: none; width: auto; max-width: none; height: 55%; min-height: 80px;
+    resize: vertical; border-right: 0; border-bottom: 1px solid var(--border);
+  }
+}

@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="panel.css">
+</head>
+<body>
+  <div id="toolbar">
+    <input id="filter" type="search" placeholder="Filter URLs…">
+    <select id="kind">
+      <option value="all">All</option>
+      <option value="image">Images</option>
+      <option value="video">Video</option>
+      <option value="audio">Audio</option>
+      <option value="script">Scripts</option>
+      <option value="style">Styles</option>
+      <option value="document">Documents</option>
+      <option value="font">Fonts</option>
+      <option value="text">Text / data</option>
+      <option value="other">Other</option>
+    </select>
+    <button id="refresh" title="Re-scan the page for files (also happens automatically every 3 s)">⟳</button>
+    <span id="count"></span>
+    <label id="mode-label" title="Show checkboxes for bulk download"><input type="checkbox" id="mode"> Check Boxes</label>
+    <button id="select-all" class="sel-only" title="Check every file that matches the current filter">Select all</button>
+    <button id="select-none" class="sel-only" title="Uncheck everything">Clear</button>
+    <button id="download-selected" class="sel-only" disabled>Download</button>  </div>
+  <div id="main">
+    <div id="tree"></div>
+    <div id="preview">
+      <div id="tabs" hidden></div>
+      <div id="view">
+        <div id="preview-bar" hidden>
+          <a id="preview-url" target="_blank" rel="noreferrer"></a>
+          <span id="preview-info"></span>
+          <button id="copy-url">Copy URL</button>
+          <button id="download">Download</button>        </div>
+        <div id="preview-body"><p class="hint">Click a file to open it in a tab. ↑/↓ steps through files in the current tab.<br>
+          With Check Boxes on, Space checks a file and Shift-click checks a range.<br>
+          Reload the page with DevTools open to capture everything (including file sizes).</p></div>
+      </div>
+    </div>
+  </div>
+  <div id="menu" hidden></div>
+  <script src="panel.js"></script>
+</body>
+</html>
